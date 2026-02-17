@@ -1,0 +1,35 @@
+name: Build Android APK (Saat – Aanthh)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      # Your project is a minimal Flutter project, so we generate platform folders if missing.
+      - name: Ensure Flutter scaffolding
+        run: flutter create .
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Release APK
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: saat-aanthh-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
